@@ -1,7 +1,9 @@
+import Link from "next/link";
 
 interface Post {
   id: number;
   name: string;
+  email: string;
 }
 
 export default async function Home() {
@@ -12,8 +14,10 @@ export default async function Home() {
   return (
     <ul>
       {posts.map((post: Post) => (
-        <li key={post.id}>{post.name}</li>
-        
+        <Link key={post.id} href={`/post/${post.id}`}>
+          <li>{post.name}</li>
+          <li>{post.email}</li>
+        </Link>
       ))}
     </ul>
   );
