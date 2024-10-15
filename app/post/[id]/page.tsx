@@ -1,30 +1,34 @@
-'use client'
-import React, { useState } from 'react'
+import prisma from "@/lib/prisma"
 
-const PostPage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+const PostPage = async () => {
+await prisma.user.findUnique({
+    where: {
+      id: 1
+    }
+  })
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    // Send the name to the API
-   await fetch('/api/infoupdate', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
+  const updateUser = async (formData: FormData): Promise<void> => {
+    'use server'
+    const name = formData.get('name') as string
+    const email = formData.get('email') as string
+    await prisma.user.update({
+      where: {
+        id: 1
       },
-      body: JSON.stringify({ name, email }),
-    });
-    // Handle the response as needed
-  };
+      data: {
+        name,
+        email
+      }
+    })
+  }
 
   return (
-      <div>
-          <form onSubmit={handleSubmit}>
-            <input type="text" name="name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input type="text" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <button type="submit">Submit</button>
-          </form>
+    <div>
+      <form action={updateUser}>
+        <input type="text" name="name" required />
+        <input type="email" name="email" required />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   )
 }

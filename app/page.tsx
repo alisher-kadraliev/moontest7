@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import Link from "next/link";
 
 interface Post {
@@ -7,10 +8,7 @@ interface Post {
 }
 
 export default async function Home() {
-  const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/infoget`, {
-    cache: "no-store",
-  })
-  const posts = await data.json()
+  const posts = await prisma.user.findMany()
   return (
     <ul>
       {posts.map((post: Post) => (
